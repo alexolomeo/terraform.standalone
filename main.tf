@@ -95,6 +95,45 @@ resource "aws_db_subnet_group" "subnet-db" {
 
 
 /*
+  RDS MODULE AURORA PRODUCTION APP1
+*/
+
+module "production-databata-1" {
+  source    = "./modules/database-rds-aurora"
+  name      = "database-1"
+  identifier = "${lower(var.projectname)}-app1-prod"
+  vpc_id    = "${aws_vpc.network.id}"
+  subnet_id = "${aws_subnet.production.id}"
+  db_subnet_group_name = "${aws_db_subnet_group.subnet-db.name}"
+  master_username  = "${lookup(var.db_credential, "username")}"
+  master_password  = "${lookup(var.db_credential, "password")}"
+  environment	= "${lookup(var.environment, "production")}"
+  database_name      = "name1db"
+}
+
+
+/*
+  INSTANCE PRODUCTION APP1
+*/
+resource "aws_key_pair" "appkey1" {
+  key_name = "KEY-${upper(var.projectname)}-APP1"
+  public_key = "${file("./keys/${var.PUBLIC_KEY_APP}")}"
+}
+
+module "production-app-1" {
+  source    = "./modules/application-ec2-elb"
+  name 	    = "APP1"
+  ami       = "${var.ami-app1}"
+  instance_type = "${lookup(var.instance-type-x64, "medium")}"
+  vpc_id    = "${aws_vpc.network.id}"
+  subnets = ["${aws_subnet.production.id}", "${aws_subnet.integration.id}"]
+  subnet_id = "${aws_subnet.production.id}"
+  keypair = "${aws_key_pair.appkey1.key_name}"
+  cidr_blocks    = "${var.network_access}"
+  environment	= "${lookup(var.environment, "production")}"
+}
+
+/*
   RDS MODULE PRODUCTION APP2 AS SINGLE MODE 
 */
 
