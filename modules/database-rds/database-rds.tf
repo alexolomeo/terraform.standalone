@@ -37,6 +37,6 @@ resource "aws_db_instance" "rds_app" {
   skip_final_snapshot      = "true"
   parameter_group_name     = "default.postgres12" # if you have tuned it
   db_subnet_group_name     = "${var.db_subnet_group_name}"
-  vpc_security_group_ids   = ["${aws_security_group.syscom_db.id}"]
+  vpc_security_group_ids   = ["${aws_security_group.security_group_db.id}"]
 }
 
