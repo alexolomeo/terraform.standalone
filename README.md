@@ -1,4 +1,10 @@
 # terraform.standalone
+```yml
+# Ansible Role: terraform.standalone
+# Author: Alexander Aguilar
+# Email: alexolomeo@gmail.com
+```
+
 terraform solution for automation a standalone service with ec2 and RDS.
 
 Add instances as this example for Aurora instancias an changes the value of variable.tf
